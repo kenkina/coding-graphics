@@ -10,7 +10,7 @@ class Dashboard {
     this.#config = config;
 
     /* this.#graphics.forEach(graphic => {
-      console.info(graphic);
+      console.info(graphic.toString());
     }); */
   }
 
@@ -23,12 +23,12 @@ class Dashboard {
     let seed = seedGraphic.getSeed();
 
     if (seed < 0) {
-      console.info('seed < 0:', seed);
+      //console.info('seed < 0:', seed);
       return 0;
     }
 
     if (seed % 1 !== 0) {
-      console.info('seed has decimals', seed, ++seed);
+      //console.info('seed has decimals', seed, ++seed);
     }
 
     return Math.ceil(seed);
@@ -42,24 +42,28 @@ class Dashboard {
     let seed = seedGraphic.getSeed();
 
     if (seed > 0) {
-      console.info('seed > 0:', seed);
+      //console.info('seed > 0:', seed);
       return 0;
     }
 
     // Does seed have decimals?
     if (seed % 1 !== 0) {
-      console.info('seed has decimals', seed, --seed);
+      //console.info('seed has decimals', seed, --seed);
     }
 
     return Math.ceil(seed);
   }
 
   build() {
-    const maxRow = this.getMaxSeed();
-    const minRow = this.getMinSeed();
+    let maxRow = this.getMaxSeed();
+    let minRow = this.getMinSeed();
+
+    if (maxRow === 0 && maxRow < Math.abs(minRow)) {
+      maxRow = Math.abs(minRow);
+    }
 
     this.#graphics.forEach(graphic => {
-
+      // const rows = maxRow != 0 ? maxRow : Math.abs(minRow);
       graphic.setMatrix(maxRow, this.#config.maxColumnsPerGraphic, this.#config.symbol.E);
 
       const rInit = graphic.getNRows() === maxRow ? 0 : maxRow - graphic.getNRows();
@@ -99,7 +103,7 @@ class Dashboard {
     const maxRow = this.getMaxSeed();
     const minRow = this.getMinSeed();
 
-    console.info("maxRow: ", maxRow, "minRow", minRow);
+    // console.info("maxRow: ", maxRow, "minRow", minRow);
 
 
     for (let dRowIndex = 0; dRowIndex < maxRow; dRowIndex++) {
@@ -114,7 +118,7 @@ class Dashboard {
       });
       dRow += this.#config.symbol.SC;
 
-      //console.info(dRowIndex, dRow);
+      //console.info(dRowIndex, "dRow", dRow);
       console.info(dRow);
     }
 
@@ -138,7 +142,7 @@ class Dashboard {
       });
       dRow += this.#config.symbol.SC;
 
-      //console.info(dRowIndex, dRow);
+      //console.info(dRowIndex, "dRow", dRow);
       console.info(dRow);
     }
   }

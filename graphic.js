@@ -57,7 +57,13 @@ class Graphic {
   reverseMatrix() {
     this.#matrix = this.#matrix.reverse();
   }
+
+  toString() {
+    return this.#label + ": " + this.#originalSeed + " / " + this.#seed + " -nRows: " + this.#nRows;
+  }
 }
+
+
 
 
 const ValidationError = (message) => ({
