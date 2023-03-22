@@ -37,14 +37,14 @@ class Graphic {
       let j = 0
       if (i === 0 && this.seedDecimal > 0) {
         for (; j < this.seedDecimal; j++) {
-          this.matrix[i][j] = 1;
+          this.matrix[i][j] = "D";
         }
         for (; j < globalSettings.maxWidthPerGraphic; j++) {
-          this.matrix[i][j] = 0;
+          this.matrix[i][j] = "0";
         }
       } else {
         for (; j < globalSettings.maxWidthPerGraphic; j++) {
-          this.matrix[i][j] = 9;
+          this.matrix[i][j] = "I";
         }
       }
     }
