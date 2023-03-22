@@ -1,4 +1,4 @@
-# Some commands
+# Coding Graphics
 
 ### Getting started
 
