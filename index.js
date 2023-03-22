@@ -41,9 +41,15 @@ if (process.env.NODE_ENV === "prod") {
 
 try {
   const graphics = [
+    new Graphic("Label 0", 0),
     new Graphic("Label 1", 6),
     new Graphic("Label 2", 2.98),
     new Graphic("Label 3", 3.85),
+    new Graphic("Label 4", 1),
+    new Graphic("Label -1", -6),
+    new Graphic("Label -2", -2.98),
+    new Graphic("Label -3", -3.85),
+    new Graphic("Label -4", -1),
   ]
 
   const dashboard = new Dashboard(graphics, config);
