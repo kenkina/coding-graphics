@@ -6,12 +6,51 @@ function round(value, precision) {
 }
 
 
-const globalSettings = {
+const config = {
   maxWidthPerGraphic: 10,
   spaceBetweenGraphics: 5,
   isVertical: true,
-  symbol: "*",
+  symbol: {
+    D: "*", // Decimal,
+    I: "*", // Integer,
+    E: "-", // Empty,
+    X: "-", // Empty by Decimal,
+    N: "-", // Empty Negative,
+    P: "-", // Empty Positive,
+    SL: "", // Space between symbols,
+    SC: " | ", // Space between columns,
+  }
 }
+
+/* 
+    D: "D", // Decimal,
+    I: "I", // Integer,
+    E: "-", // Empty,
+    X: "X", // Empty by Decimal,
+    N: "N", // Empty Negative,
+    P: "P", // Empty Positive,
+    SL: "", // Space between symbols,
+    SC: " | ", // Space between columns,
+
+    D: "*", // Decimal,
+    I: "*", // Integer,
+    E: "-", // Empty,
+    X: "-", // Empty by Decimal,
+    N: "-", // Empty Negative,
+    P: "-", // Empty Positive,
+    SL: "", // Space between symbols,
+    SC: " | ", // Space between columns,
+
+    D: "*", // Decimal,
+    I: "*", // Integer,
+    E: " ", // Empty,
+    X: " ", // Empty by Decimal,
+    N: " ", // Empty Negative,
+    P: " ", // Empty Positive,
+    SL: "", // Space between symbols,
+    SC: " | ", // Space between columns,
+*/
+
 
 
 class Dashboard {
@@ -19,11 +58,12 @@ class Dashboard {
     this.graphics =
       [
         new Graphic("Label 1 ", 6),
-        new Graphic("Label 2 ", 2.98),
+        //new Graphic("Label 2 ", 2.98),
         new Graphic("Label 3 ", 3.85),
-        //new Graphic("Label 4 ", -1),
-        //new Graphic("Label 5 ", -6),
+        //new Graphic("Label 4 ", 1),
+        new Graphic("Label 5 ", -6),
         //new Graphic("Label 6 ", -3.85),
+        //new Graphic("Label 0 ", 0),
       ]
 
     this.graphics.forEach(graphic => {
@@ -72,28 +112,37 @@ class Dashboard {
   }
 
   build() {
-    const maxHeight = this.getMaxSeed(this.graphics);
-    const minHeight = this.getMinSeed(this.graphics);
+    const maxRow = this.getMaxSeed(this.graphics);
+    const minRow = this.getMinSeed(this.graphics);
 
     this.graphics.forEach(graphic => {
-      graphic.matrix = Array(maxHeight).fill(null).map(() => Array(globalSettings.maxWidthPerGraphic).fill("-"));
+      graphic.matrix = Array(maxRow).fill(null).map(() => Array(config.maxWidthPerGraphic).fill(config.symbol.E));
 
-      for (let rIndex = 0; rIndex < graphic.nRows; rIndex++) {
+      const rInit = graphic.nRows === maxRow ? 0 : maxRow - graphic.nRows;
 
-        let cIndex = 0 
-        if (rIndex === 0 && graphic.seedDecimal > 0) {
-          for (; cIndex < graphic.seedDecimal; cIndex++) {
-            graphic.matrix[rIndex][cIndex] = "D";
-          }
-          for (; cIndex < globalSettings.maxWidthPerGraphic; cIndex++) {
-            graphic.matrix[rIndex][cIndex] = "X";
-          }
-        } else {
-          for (; cIndex < globalSettings.maxWidthPerGraphic; cIndex++) {
-            graphic.matrix[rIndex][cIndex] = "I";
+      for (let rIndex = rInit; rIndex < maxRow; rIndex++) {
+
+        for (let cIndex = 0; cIndex < config.maxWidthPerGraphic; cIndex++) {
+
+          if (rIndex === maxRow - graphic.nRows && graphic.seedDecimal > 0) {
+            for (; cIndex < graphic.seedDecimal; cIndex++) {
+              graphic.matrix[rIndex][cIndex] = config.symbol.D;
+            }
+            for (; cIndex < config.maxWidthPerGraphic; cIndex++) {
+              graphic.matrix[rIndex][cIndex] = config.symbol.X;
+            }
+          } else {
+            for (; cIndex < config.maxWidthPerGraphic; cIndex++) {
+              graphic.matrix[rIndex][cIndex] = config.symbol.I;
+            }
           }
         }
       }
+
+      if (graphic.seed < 0) {
+        graphic.matrix = graphic.matrix.reverse();
+      }
+
     });
 
     this.graphics.forEach(graphic => {
@@ -104,62 +153,42 @@ class Dashboard {
 
   draw() {
 
-    const maxHeight = this.getMaxSeed(this.graphics);
-    const minHeight = this.getMinSeed(this.graphics);
+    const maxRow = this.getMaxSeed(this.graphics);
+    const minRow = this.getMinSeed(this.graphics);
+
+    console.log("maxRow: ", maxRow, "minRow", minRow);
 
 
-    for (let dashboardRowIndex = maxHeight; dashboardRowIndex >= minHeight; dashboardRowIndex--) {
-
-      let dashboardRow = "";
-
-
-
-
-      /* graphics.forEach(graphic => {
-        if (dashboardRowIndex > 0) {
-          if (graphic.seed < 0) {
-            dashboardRow += "-".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-          } else {
-            if (graphic.nRows < dashboardRowIndex) {
-              dashboardRow += "0".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-            } else {
-              if (graphic.seedDecimal > 0 && graphic.nRows === dashboardRowIndex) {
-                dashboardRow += "D".repeat(graphic.seedDecimal);
-                dashboardRow += "0".repeat(globalSettings.maxWidthPerGraphic - graphic.seedDecimal) + " / ";
-              } else {
-                dashboardRow += "P".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-              }
-            }
-          }
-        } else if (dashboardRowIndex < 0) {
-          if (graphic.seed >= 0) {
-            dashboardRow += "-".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-          } else {
-            //console.log(graphic.seedDecimal, graphic.nRows, dashboardRowIndex, -1 * (dashboardRowIndex))
-            if (graphic.nRows < -1 * (dashboardRowIndex + 1)) {
-              dashboardRow += "0".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-            } else {
-              if (graphic.seedDecimal > 0 && graphic.nRows === -1 * (dashboardRowIndex + 1)) {
-                dashboardRow += "D".repeat(graphic.seedDecimal);
-                dashboardRow += "0".repeat(globalSettings.maxWidthPerGraphic - graphic.seedDecimal) + " / ";
-              } else {
-                dashboardRow += "N".repeat(globalSettings.maxWidthPerGraphic) + " / ";
-              }
-            }
-          }
-    
-    
-        } else { // dashboardRowIndex === 0
-          dashboardRow += graphic.name + " / "
+    for (let dRowIndex = 0; dRowIndex < maxRow; dRowIndex++) {
+      let dRow = "";
+      this.graphics.forEach(graphic => {
+        if (graphic.seed > 0) {
+          dRow += graphic.matrix[dRowIndex].join(config.symbol.SL) + config.symbol.SC;
+        } else {
+          dRow += config.symbol.N.repeat(config.maxWidthPerGraphic) + config.symbol.SC;
         }
-    
-      }) */
+      });
+      console.log(dRowIndex, "dRow: ", dRow);
+    }
 
-      console.log(dashboardRowIndex, "dRow: ", dashboardRow)
+    let dRow = "";
+    this.graphics.forEach(graphic => {
+      dRow += graphic.label + config.symbol.SC;
+    });
+    console.log("dRow: ", dRow);
+
+    for (let dRowIndex = 0; dRowIndex < -minRow; dRowIndex++) {
+      let dRow = "";
+      this.graphics.forEach(graphic => {
+        if (graphic.seed < 0) {
+          dRow += graphic.matrix[dRowIndex].join(config.symbol.SL) + config.symbol.SC;
+        } else {
+          dRow += config.symbol.P.repeat(config.maxWidthPerGraphic) + config.symbol.SC;
+        }
+      });
+      console.log(dRowIndex, "dRow: ", dRow);
     }
   }
-
-
 
 }
 

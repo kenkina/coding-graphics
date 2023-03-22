@@ -13,12 +13,12 @@ const globalSettings = {
 
 
 class Graphic {
-  constructor(name, seed) {
-    // TODO: if name is invalid (?)
+  constructor(label, seed) {
+    // TODO: if label is invalid (?)
     // TODO: if seed is not number
     // if (seed )
 
-    this.name = name;
+    this.label = label;
     this.originalSeed = seed;
 
     // Consider only one decimal
