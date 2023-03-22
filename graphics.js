@@ -28,26 +28,9 @@ class Graphic {
     this.seedInteger = Math.abs(Math.trunc(this.seed));
     this.seedDecimal = Math.abs(Math.trunc(this.seed % 1 * 10));
 
-    // Construct the graphic matrix   
-    this.rows = (this.seedDecimal > 0) ? this.seedInteger + 1 : this.seedInteger;
-    this.matrix = Array(this.rows).fill(null).map(() => Array(globalSettings.maxWidthPerGraphic).fill(0));
-
-    for (let i = 0; i < this.rows; i++) {
-
-      let j = 0
-      if (i === 0 && this.seedDecimal > 0) {
-        for (; j < this.seedDecimal; j++) {
-          this.matrix[i][j] = "D";
-        }
-        for (; j < globalSettings.maxWidthPerGraphic; j++) {
-          this.matrix[i][j] = "0";
-        }
-      } else {
-        for (; j < globalSettings.maxWidthPerGraphic; j++) {
-          this.matrix[i][j] = "I";
-        }
-      }
-    }
+    // Construct the graphic matrix
+    this.nRows = (this.seedDecimal > 0) ? this.seedInteger + 1 : this.seedInteger;
+    this.matrix = [];
   }
 
 }
