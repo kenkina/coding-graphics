@@ -1,16 +1,4 @@
-function round(value, precision) {
-  const multiplier = Math.pow(10, precision || 0);
-  return Math.round(value * multiplier) / multiplier;
-}
-
-
-const globalSettings = {
-  maxWidthPerGraphic: 10,
-  spaceBetweenGraphics: 5,
-  isVertical: true,
-  symbol: "*",
-}
-
+const { round } = require("./maths.js");
 
 class Graphic {
 
@@ -20,17 +8,19 @@ class Graphic {
   #seedInteger
   #seedDecimal
   #nRows
+  #matrix
 
-  constructor(label, seed) {
+  constructor(label, seed, maxColumnsPerGraphic = 10, referenceValue = 6) {
     // TODO: if label is invalid (?)
-    // TODO: if seed is not number
-    // if (seed )
+    // label: max = maxColumnsPerGraphic
 
-    this.#label = label;
+    // TODO: if seed is not number
+
+    this.#label = label + " ".repeat(maxColumnsPerGraphic - label.length);
     this.#originalSeed = seed;
 
     // Consider only one decimal
-    this.#seed = round(seed * globalSettings.maxWidthPerGraphic / 6, 1);
+    this.#seed = round(seed * maxColumnsPerGraphic / referenceValue, 1);
 
     // Extract integer and decimal from seed
     this.#seedInteger = Math.abs(Math.trunc(this.#seed));
@@ -38,7 +28,7 @@ class Graphic {
 
     // Construct the graphic matrix
     this.#nRows = (this.#seedDecimal > 0) ? this.#seedInteger + 1 : this.#seedInteger;
-    this.matrix = [];
+    this.#matrix = [];
   }
 
   getLabel() { return this.#label; }
@@ -46,6 +36,19 @@ class Graphic {
   getSeedInteger() { return this.#seedInteger; }
   getSeedDecimal() { return this.#seedDecimal; }
   getNRows() { return this.#nRows; }
+  getMatrix() { return this.#matrix; }
+
+  setMatrix(rows, columns, symbol = "") {
+    this.#matrix = Array(rows).fill(null).map(() => Array(columns).fill(symbol));
+  }
+
+  setMatrixValue(row, column, value) {
+    this.#matrix[row][column] = value;
+  }
+
+  reverseMatrix() {
+    this.#matrix = this.#matrix.reverse();
+  }
 
 
 }
