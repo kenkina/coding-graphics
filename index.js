@@ -23,9 +23,9 @@ const config = {
 
 
 if (process.env.NODE_ENV === "prod") {
-  console.warn = () => { };
+  /* console.warn = () => { };
   console.log = () => { };
-  console.info = () => { };
+  console.info = () => { }; */
 
   config.symbol = {
     D: "*", // Decimal,
@@ -39,21 +39,25 @@ if (process.env.NODE_ENV === "prod") {
   }
 }
 
+try {
+  const graphics = [
+    //new Graphic("Label 0", 0),
+    new Graphic("Label 1", 6),
+    //new Graphic("Label 2", 2.98),
+    new Graphic("Label 3", 3.85),
+    //new Graphic("Label 4", 1),
+    //new Graphic("Label -1", -6),
+    //new Graphic("Label -2", -2.98),
+    //new Graphic("Label -3", -3.85),
+    new Graphic("Label -4", -1),
+  ]
 
-const graphics = [
-  //new Graphic("Label 0 ", 0),
-  new Graphic("Label 1 ", 6),
-  //new Graphic("Label 2 ", 2.98),
-  new Graphic("Label 3 ", 3.85),
-  //new Graphic("Label 4 ", 1),
-  //new Graphic("Label -1 ", -6),
-  //new Graphic("Label -2 ", -2.98),
-  new Graphic("Label -3 ", -3.85),
-  //new Graphic("Label -4 ", -1),
-]
+  const dashboard = new Dashboard(graphics, config);
+  dashboard.build();
+  dashboard.draw();
 
 
-
-const dashboard = new Dashboard(graphics, config);
-dashboard.build();
-dashboard.draw();
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}

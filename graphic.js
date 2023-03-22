@@ -11,10 +11,18 @@ class Graphic {
   #matrix
 
   constructor(label, seed, maxColumnsPerGraphic = 10, referenceValue = 6) {
-    // TODO: if label is invalid (?)
-    // label: max = maxColumnsPerGraphic
 
-    // TODO: if seed is not number
+    if (label === undefined || seed === undefined) {
+      throw ValidationError("Label or seed is missing.");
+    }
+
+    if (label.length > maxColumnsPerGraphic) {
+      throw ValidationError("Label is too long.");
+    }
+
+    if (isNaN(seed)) {
+      throw ValidationError("Seed must be a number.");
+    }
 
     this.#label = label + " ".repeat(maxColumnsPerGraphic - label.length);
     this.#originalSeed = seed;
@@ -49,12 +57,12 @@ class Graphic {
   reverseMatrix() {
     this.#matrix = this.#matrix.reverse();
   }
-
-
 }
 
-Graphic.prototype.toString = function () {
-  return 'Hello! i am ';
-}
+
+const ValidationError = (message) => ({
+  error: new Error(message),
+  code: 'GRAPHIC_VALIDATION_ERROR'
+});
 
 module.exports = { Graphic }
