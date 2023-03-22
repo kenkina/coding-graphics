@@ -1,4 +1,4 @@
-const { Graphic } = require('./graphics.js');
+const { Graphic } = require('./graphic.js');
 const { Dashboard } = require('./dashboard.js');
 
 
